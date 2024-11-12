@@ -12,6 +12,10 @@ interface WalletKitProviderProps {
   children: ReactNode;
 }
 
+/**
+ * WalletKitProvider manages WalletConnect sessions and handles session proposals and requests.
+ * It integrates with the MainContext to access active accounts and stealth keys.
+ */
 const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
   const {activeAccount, accountList, setWalletKitInstance, metaStealthKeys} = useContext(MainContext);
   const walletKitRef = useRef<WalletKit | null>(null);
@@ -27,16 +31,15 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
   const [currentRequest, setCurrentRequest] = useState<any>(null);
   const [currentResponse, setCurrentResponse] = useState<any>(null);
 
-  // Refs for accountList and activeAccount
+  // Refs to keep track of accountList and activeAccount without causing re-renders
   const accountListRef = useRef(accountList);
   useEffect(() => {
     accountListRef.current = accountList;
   }, [accountList]);
 
-  // Create refs for metaStealthKeys and activeAccount
+  // Refs for metaStealthKeys and activeAccount to access latest values in callbacks
   const metaStealthKeysRef = useRef<MetaStealthKey | undefined>(metaStealthKeys);
   const activeAccountRef = useRef(activeAccount);
-  // Update refs when context values change
   useEffect(() => {
     metaStealthKeysRef.current = metaStealthKeys;
   }, [metaStealthKeys]);
@@ -44,7 +47,10 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
     activeAccountRef.current = activeAccount;
   }, [activeAccount]);
 
-  // Session proposal handler
+  /**
+   * Handles incoming session proposals by approving them if accounts are available.
+   * If no accounts are available, the proposal is stored for later approval.
+   */
   const onSessionProposal = useCallback(async ({id, params}: WalletKitTypes.SessionProposal) => {
     console.log('onSessionProposal - Received session proposal:', params);
     if (accountListRef.current.length === 0) {
@@ -56,6 +62,9 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
     await approveSessionProposal({id, params});
   }, [accountListRef]);
 
+  /**
+   * Approves a session proposal by building the approved namespaces and responding to WalletConnect.
+   */
   const approveSessionProposal = async ({id, params}: { id: number; params: any }) => {
     if (!activeAccountRef.current) {
       console.warn('No active account to approve session proposal.');
@@ -94,7 +103,9 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
     }
   };
 
-  // Handle pending session proposals when accountList changes
+  /**
+   * Automatically approves any pending session proposals once accounts become available.
+   */
   useEffect(() => {
     if (pendingSessionProposal && accountList.length > 0) {
       const {id, params} = pendingSessionProposal;
@@ -103,7 +114,9 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
     }
   }, [accountList, pendingSessionProposal]);
 
-  // Handle session requests
+  /**
+   * Handles incoming session requests by processing supported methods and prompting for user confirmation when necessary.
+   */
   const handleSessionRequest = useCallback(async (event: any) => {
     console.log('Received session request:', event);
     const {topic, params, id} = event;
@@ -218,7 +231,9 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
     await walletKitRef.current!.respondSessionRequest({topic, response});
   }, [walletKitRef, activeAccountRef]);
 
-  // Initialize WalletKit
+  /**
+   * Initializes the WalletKit instance, sets up event listeners, and restores any existing sessions.
+   */
   useEffect(() => {
     const initializeWalletKit = async () => {
       const core = new Core({
@@ -248,11 +263,11 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
         console.log('Restored existing session:', session);
       }
 
-      // Set up event listeners
+      // Set up event listeners for session proposals and requests
       walletKit.on('session_proposal', onSessionProposal);
       walletKit.on('session_request', handleSessionRequest);
 
-      // Cleanup on unmount
+      // Cleanup event listeners on unmount
       return () => {
         walletKit.off('session_proposal', onSessionProposal);
         walletKit.off('session_request', handleSessionRequest);
@@ -260,25 +275,32 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
     };
 
     void initializeWalletKit();
-  }, []); // Removed accountList from dependencies
+  }, []); // Empty dependency array to run only once on mount
 
-  // Confirmation handlers
+  /**
+   * Handles user confirmation for signature requests by resolving the associated promise.
+   */
   const handleConfirm = async () => {
     if (currentResponse) {
       currentResponse(true); // Resolve the promise as approved
     }
   };
 
+  /**
+   * Handles user rejection for signature requests by resolving the associated promise.
+   */
   const handleReject = async () => {
     if (currentResponse) {
       currentResponse(false); // Resolve the promise as rejected
     }
   };
 
-  // Handle account change
+  /**
+   * Updates the WalletConnect session when the active account changes by emitting events and updating namespaces.
+   */
   useEffect(() => {
     if (walletKitRef.current && sessionTopic && activeAccount && proposal) {
-      // Emit accountsChanged event
+      // Emit accountsChanged event to notify connected wallets of the active account change
       console.log('Emitting accountsChanged event with address:', activeAccount.address);
       void walletKitRef.current.emitSessionEvent({
         topic: sessionTopic,
@@ -313,7 +335,9 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
     }
   }, [activeAccount, sessionTopic, proposal]);
 
-  // Handle accountList change (Update namespaces if needed)
+  /**
+   * Updates the WalletConnect session namespaces whenever the account list changes to reflect all available accounts.
+   */
   useEffect(() => {
     if (walletKitRef.current && sessionTopic && accountList.length > 0 && proposal) {
       // Rebuild approved namespaces with updated accountList
@@ -332,7 +356,7 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
         }
       });
 
-      // Update session namespaces
+      // Update session namespaces with the new list of accounts
       void walletKitRef.current.updateSession({
         topic: sessionTopic,
         namespaces: updatedNamespaces
@@ -343,6 +367,7 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
 
   return <>
     {children}
+    {/* Dialog for confirming signature requests */}
     <WCConfirmationDialog
       open={isDialogOpen}
       request={currentRequest?.request}
