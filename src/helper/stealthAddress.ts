@@ -5,6 +5,15 @@ import {
   generateStealthPrivateKey
 } from '@fluidkey/stealth-account-kit';
 
+/**
+ * Generates a stealth address and its corresponding ephemeral private key.
+ *
+ * @param params - The parameters required to generate the stealth address.
+ * @param params.viewingPrivateKey - The viewing private key in hex format.
+ * @param params.spendingPublicKey - The spending public key in hex format.
+ * @param params.nonce - A unique nonce to ensure the uniqueness of the stealth address.
+ * @returns An object containing the generated stealth address and ephemeral private key.
+ */
 export const generateStealthAddress = (params: {
   viewingPrivateKey: `0x${string}`;
   spendingPublicKey: `0x${string}`;
@@ -14,37 +23,50 @@ export const generateStealthAddress = (params: {
   ephemeralPrivateKey: `0x${string}`;
 } => {
 
-  // Extract the node required to generate the pseudo-random input for stealth address generation
+  // Define the node number used for extracting the viewing private key node.
   const viewingPrivateKeyNodeNumber = 0;
+
+  // Extract the specific node from the viewing private key required for generating the ephemeral key.
   const privateViewingKeyNode = extractViewingPrivateKeyNode(params.viewingPrivateKey, viewingPrivateKeyNodeNumber);
 
+  // Generate an ephemeral private key using the extracted viewing key node and the provided nonce.
   const { ephemeralPrivateKey } = generateEphemeralPrivateKey({
     viewingPrivateKeyNode: privateViewingKeyNode,
     nonce: params.nonce,
     chainId: 0,
   });
 
+  // Generate stealth addresses using the spending public key and the generated ephemeral private key.
   const { stealthAddresses } = generateStealthAddresses({
     spendingPublicKeys: [params.spendingPublicKey],
     ephemeralPrivateKey,
   });
 
+  // Return the first stealth address and the corresponding ephemeral private key.
   return {
     stealthAddress: stealthAddresses[0],
     ephemeralPrivateKey,
   };
-}
+};
 
+/**
+ * Evaluates and generates the stealth private spending key based on the spending private key and ephemeral public key.
+ *
+ * @param params - The parameters required to evaluate the stealth private key.
+ * @param params.spendingPrivateKey - The spending private key in hex format.
+ * @param params.ephemeralPublicKey - The ephemeral public key in hex format.
+ * @returns The generated stealth private key in hex format.
+ */
 export const evalStealthAddressPrivateKey = (params: {
   spendingPrivateKey: `0x${string}`;
   ephemeralPublicKey: `0x${string}`;
 }): `0x${string}` => {
 
-  // Generate the stealth private spending key controlling the stealth Safe
+  // Generate the stealth private spending key using the provided spending private key and ephemeral public key.
   const { stealthPrivateKey } = generateStealthPrivateKey({
     spendingPrivateKey: params.spendingPrivateKey,
     ephemeralPublicKey: params.ephemeralPublicKey,
   });
 
   return stealthPrivateKey;
-}
+};

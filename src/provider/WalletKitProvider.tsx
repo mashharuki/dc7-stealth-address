@@ -205,7 +205,6 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
     try {
       switch (request.method) {
         case 'eth_sendTransaction':
-          console.log('eth_sendTransaction', request);
           // Implement transaction sending logic here
           response = {id, result: 'Transaction sent', jsonrpc: '2.0'};
           break;
@@ -251,7 +250,6 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
       });
 
       walletKitRef.current = walletKit;
-      console.log('Initialized WalletKit:', walletKit);
       setWalletKitInstance!(walletKit);
 
       // Check for existing sessions

@@ -13,9 +13,7 @@ const WalletConnectDialog: React.FC<WalletConnectDialogProps> = ({ open, onClose
   const [wcValue, setWcValue] = useState('');
 
   useEffect(() => {
-    console.log('walletKitInstance inside Dashboard', walletKitInstance);
     if (wcValue.startsWith('wc:') && !!walletKitInstance) {
-      console.log('pairing');
       void walletKitInstance.pair({
         uri: wcValue,
       });
