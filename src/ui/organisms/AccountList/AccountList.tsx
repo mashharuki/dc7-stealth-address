@@ -53,9 +53,6 @@ const AccountList: React.FC<IAccountList> = () => {
                       color={'primary'}
                       label={acc.nickname} />
                 <Typography sx={{mt: 1}}>{acc.address}</Typography>
-                {/*<Badge badgeContent={acc.nickname} color="primary">*/}
-                {/*  {acc.address}*/}
-                {/*</Badge>*/}
               </TableCell>
               <TableCell align="right">
                 {activeAccount?.address !== acc.address && (
