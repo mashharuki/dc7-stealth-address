@@ -6,7 +6,7 @@ import { Cancel, CheckCircle } from '@mui/icons-material';
 
 interface WCConfirmationDialogProps {
   open: boolean;
-  request: any; // Define a proper type based on your request structure
+  request: any;
   onConfirm: () => void;
   onReject: () => void;
 }
