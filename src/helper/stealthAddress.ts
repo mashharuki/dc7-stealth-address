@@ -83,20 +83,15 @@ export const generateMetaStealthKeys = async (params: {
   spendingPrivateKey: `0x${string}`;
   viewingPrivateKey: `0x${string}`;
 }> => {
-  alert('Generating meta stealth keys not implemented yet');
   const message_to_authenticate = 'Hello Devcon 7!!';
 
   // Load the master key account
-  // TODO - Replace with the actual master key account
-
+  const masterKeyAccount = privateKeyToAccount(params.masterPrivateKey);
   // Generate a signature to derive meta stealth keys
-  // TODO - Replace with the actual signature
+  const messageSignature = await masterKeyAccount.signMessage({
+    message: message_to_authenticate,
+  });
 
   // Use Stealth Account kit to Derive stealth keys from the signature
-  // TODO - Replace with the actual stealth keys
-
-  return {
-    spendingPrivateKey: '0x',
-    viewingPrivateKey: '0x',
-  };
+  return generateKeysFromSignature(messageSignature);
 }
