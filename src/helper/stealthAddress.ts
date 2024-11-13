@@ -24,32 +24,27 @@ export const generateStealthAddress = (params: {
   ephemeralPrivateKey: `0x${string}`;
 } => {
 
+  alert('Generating stealth address not implemented yet');
+
   // Define the node number used for extracting the viewing private key node.
   const viewingPrivateKeyNodeNumber = 0;
 
   // Use Stealth Account kit to extract the specific node from the viewing private key
   // required for generating the ephemeral key.
-  const privateViewingKeyNode = extractViewingPrivateKeyNode(params.viewingPrivateKey, viewingPrivateKeyNodeNumber);
+  // TODO - Replace with the actual private viewing key node
 
   // Use Stealth Account kit to generate an ephemeral private key using the extracted
   // viewing key node and the provided nonce.
-  const { ephemeralPrivateKey } = generateEphemeralPrivateKey({
-    viewingPrivateKeyNode: privateViewingKeyNode,
-    nonce: params.nonce,
-    chainId: 0,
-  });
+  // TODO - Replace with the actual ephemeral private key
 
   // Use Stealth Account Kit to generate stealth addresses using the spending
   // public key and the generated ephemeral private key.
-  const { stealthAddresses } = generateStealthAddresses({
-    spendingPublicKeys: [params.spendingPublicKey],
-    ephemeralPrivateKey,
-  });
+  // TODO - Replace with the actual stealth addresses
 
   // Return the first stealth address and the corresponding ephemeral private key.
   return {
-    stealthAddress: stealthAddresses[0],
-    ephemeralPrivateKey,
+    stealthAddress: '0x',
+    ephemeralPrivateKey: '0x',
   };
 };
 
@@ -66,14 +61,13 @@ export const evalStealthAddressPrivateKey = (params: {
   ephemeralPublicKey: `0x${string}`;
 }): `0x${string}` => {
 
+  alert('Evaluating stealth address private key not implemented yet');
+
   // USe Stealth Account kit to generate the stealth private spending key using the provided
   // spending private key and ephemeral public key.
-  const { stealthPrivateKey } = generateStealthPrivateKey({
-    spendingPrivateKey: params.spendingPrivateKey,
-    ephemeralPublicKey: params.ephemeralPublicKey,
-  });
+  // TODO - Replace with the actual stealth private key
 
-  return stealthPrivateKey;
+  return '0x';
 };
 
 /**
@@ -89,15 +83,20 @@ export const generateMetaStealthKeys = async (params: {
   spendingPrivateKey: `0x${string}`;
   viewingPrivateKey: `0x${string}`;
 }> => {
+  alert('Generating meta stealth keys not implemented yet');
   const message_to_authenticate = 'Hello Devcon 7!!';
 
   // Load the master key account
-  const masterKeyAccount = privateKeyToAccount(params.masterPrivateKey);
+  // TODO - Replace with the actual master key account
+
   // Generate a signature to derive meta stealth keys
-  const messageSignature = await masterKeyAccount.signMessage({
-    message: message_to_authenticate,
-  });
+  // TODO - Replace with the actual signature
 
   // Use Stealth Account kit to Derive stealth keys from the signature
-  return generateKeysFromSignature(messageSignature);
+  // TODO - Replace with the actual stealth keys
+
+  return {
+    spendingPrivateKey: '0x',
+    viewingPrivateKey: '0x',
+  };
 }

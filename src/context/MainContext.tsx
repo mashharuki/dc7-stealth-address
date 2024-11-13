@@ -119,11 +119,15 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
    * @param masterPrivateKey - The master private key to initialize with
    */
   const initMasterKey = useCallback(async (masterPrivateKey: `0x${string}`) => {
-    setMasterPrivateKey(masterPrivateKey);
 
     const keys = await generateMetaStealthKeys({
       masterPrivateKey,
     });
+
+    if (keys.viewingPrivateKey === '0x') {
+      return;
+    }
+    setMasterPrivateKey(masterPrivateKey);
 
     setMetaStealthKeys({
       spendingPublicKey: privateKeyToAccount(keys.spendingPrivateKey).publicKey,
