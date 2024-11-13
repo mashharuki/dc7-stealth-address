@@ -75,10 +75,11 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
         proposal: params,
         supportedNamespaces: {
           eip155: {
-            chains: ['eip155:8453', 'eip155:11155111'],
+            chains: ['eip155:1', 'eip155:8453', 'eip155:11155111'],
             methods: ['eth_sendTransaction', 'personal_sign', 'eth_signTypedData_v4'],
             events: ['accountsChanged', 'chainChanged'],
             accounts: [
+              `eip155:1:${activeAccountRef.current.address.toLowerCase()}`,
               `eip155:8453:${activeAccountRef.current.address.toLowerCase()}`,
               `eip155:11155111:${activeAccountRef.current.address.toLowerCase()}`
             ],
