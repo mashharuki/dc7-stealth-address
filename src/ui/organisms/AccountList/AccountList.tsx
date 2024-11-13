@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import {
+  Box,
   Chip,
   IconButton,
   Paper,
@@ -13,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { MainContext } from '../../../context/MainContext';
-import { CheckCircle, FiberManualRecord, } from '@mui/icons-material';
+import { CheckCircle, FiberManualRecord, Launch, } from '@mui/icons-material';
 
 /**
  *
@@ -52,7 +53,22 @@ const AccountList: React.FC<IAccountList> = () => {
                 <Chip size={'small'}
                       color={'primary'}
                       label={acc.nickname} />
-                <Typography sx={{mt: 1}}>{acc.address}</Typography>
+                <Box display={"flex"} flexDirection={"row"}>
+                  <Typography sx={{mt: 1}}>{acc.address}</Typography>
+                  <Tooltip title="View on BaseScan">
+                    <IconButton
+                      component="a"
+                      href={`https://basescan.org/address/${acc.address}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`View ${acc.address} on BaseScan`}
+                      size="small"
+                      sx={{ color: 'white' }}
+                    >
+                      <Launch fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
               </TableCell>
               <TableCell align="right">
                 {activeAccount?.address !== acc.address && (
