@@ -1,0 +1,95 @@
+{
+  "name": "dc7-stealth-address",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "11.11.1",
+    "@emotion/styled": "11.11.0",
+    "@fluidkey/stealth-account-kit": "^1.0.1",
+    "@mui/icons-material": "5.14.6",
+    "@mui/lab": "5.0.0-alpha.157",
+    "@mui/material": "5.15.1",
+    "@reown/walletkit": "^1.1.1",
+    "@testing-library/jest-dom": "5.17.0",
+    "@types/react": "18.2.45",
+    "@types/react-dom": "18.2.7",
+    "@walletconnect/core": "^2.17.2",
+    "@walletconnect/utils": "^2.17.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-router-dom": "6.15.0",
+    "react-scripts": "5.0.1",
+    "react-syntax-highlighter": "^15.6.1",
+    "react-use": "17.5.1",
+    "serve": "14.2.1",
+    "typescript": "5.6.3",
+    "viem": "2.7.15",
+    "wagmi": "2.5.7",
+    "web-vitals": "2.1.4",
+    "webpack": "5.94.0",
+    "workbox-core": "6.6.0",
+    "workbox-precaching": "6.6.0",
+    "workbox-routing": "6.6.0",
+    "workbox-strategies": "6.6.0"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject",
+    "preinstall": "npx only-allow yarn",
+    "lint": "eslint src/**/*.{js,jsx,ts,tsx}",
+    "lint:fix": "eslint --fix src/**/*.{js,jsx,ts,tsx}",
+    "serve": "serve -s build",
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      "defaults"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/react-router-dom": "^5.3.3",
+    "@types/react-syntax-highlighter": "^15",
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "@typescript-eslint/parser": "^6.4.1",
+    "assert": "^2.0.0",
+    "eslint": "^8.0.1",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-standard-with-typescript": "^40.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-standard": "^5.0.0",
+    "path-to-regexp": "^6.2.0",
+    "prettier": "^3.0.2",
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.2.1",
+    "stream-browserify": "^3.0.0",
+    "url": "^0.11.1",
+    "workbox-cli": "^7.0.0",
+    "workbox-webpack-plugin": "^7.0.0"
+  },
+  "engines": {
+    "yarn": ">= 1.0.0"
+  },
+  "packageManager": "yarn@4.0.2"
+}
