@@ -24,27 +24,32 @@ export const generateStealthAddress = (params: {
   ephemeralPrivateKey: `0x${string}`;
 } => {
 
-  alert('Generating stealth address not implemented yet');
-
   // Define the node number used for extracting the viewing private key node.
   const viewingPrivateKeyNodeNumber = 0;
 
   // Use Stealth Account kit to extract the specific node from the viewing private key
   // required for generating the ephemeral key.
-  // TODO - Replace with the actual private viewing key node
+  const privateViewingKeyNode = extractViewingPrivateKeyNode(params.viewingPrivateKey, viewingPrivateKeyNodeNumber);
 
   // Use Stealth Account kit to generate an ephemeral private key using the extracted
   // viewing key node and the provided nonce.
-  // TODO - Replace with the actual ephemeral private key
+  const { ephemeralPrivateKey } = generateEphemeralPrivateKey({
+    viewingPrivateKeyNode: privateViewingKeyNode,
+    nonce: params.nonce,
+    chainId: 0,
+  });
 
   // Use Stealth Account Kit to generate stealth addresses using the spending
   // public key and the generated ephemeral private key.
-  // TODO - Replace with the actual stealth addresses
+  const { stealthAddresses } = generateStealthAddresses({
+    spendingPublicKeys: [params.spendingPublicKey],
+    ephemeralPrivateKey,
+  });
 
   // Return the first stealth address and the corresponding ephemeral private key.
   return {
-    stealthAddress: '0x',
-    ephemeralPrivateKey: '0x',
+    stealthAddress: stealthAddresses[0],
+    ephemeralPrivateKey,
   };
 };
 
