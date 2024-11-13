@@ -143,6 +143,17 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
       spendingPrivateKey: currentMetaStealthKeys?.spendingPrivateKey,
       ephemeralPublicKey: activeAccountRef.current.ephemeralPublicKey,
     });
+    // fail if we cannot return a valid private key
+    if (accountPrivateKey === '0x') {
+      await walletKitRef.current!.respondSessionRequest({
+        topic, response: {
+          id,
+          error: {code: 4001, message: 'User rejected the request'},
+          jsonrpc: '2.0'
+        }
+      });
+      return;
+    }
     const account = privateKeyToAccount(accountPrivateKey);
     let response;
 
