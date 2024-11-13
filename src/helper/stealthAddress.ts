@@ -1,9 +1,10 @@
 import {
   extractViewingPrivateKeyNode,
-  generateEphemeralPrivateKey,
+  generateEphemeralPrivateKey, generateKeysFromSignature,
   generateStealthAddresses,
   generateStealthPrivateKey
 } from '@fluidkey/stealth-account-kit';
+import { privateKeyToAccount } from 'viem/accounts';
 
 /**
  * Generates a stealth address and its corresponding ephemeral private key.
@@ -70,3 +71,27 @@ export const evalStealthAddressPrivateKey = (params: {
 
   return stealthPrivateKey;
 };
+
+/**
+ * Generates the meta stealth keys based on the provided master private key.
+ *
+ * @param params - The parameters required to generate the meta stealth keys.
+ * @param params.masterPrivateKey - The master private key in hex format.
+ * @returns An object containing the generated spending and viewing private keys.
+ */
+export const generateMetaStealthKeys = async (params: {
+  masterPrivateKey: `0x${string}`;
+}): Promise<{
+  spendingPrivateKey: `0x${string}`;
+  viewingPrivateKey: `0x${string}`;
+}> => {
+  // Generate a signature to derive meta stealth keys
+  const message_to_authenticate = 'Hello Devcon 7!!';
+  const masterKeyAccount = privateKeyToAccount(params.masterPrivateKey);
+  const messageSignature = await masterKeyAccount.signMessage({
+    message: message_to_authenticate,
+  });
+
+  // Derive stealth keys from the signature
+  return generateKeysFromSignature(messageSignature);
+}

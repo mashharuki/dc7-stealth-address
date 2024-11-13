@@ -4,7 +4,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { AccountBaseType, MetaStealthKey } from './MainContextTypes';
 import WalletKit from '@reown/walletkit';
 import { generateKeysFromSignature } from '@fluidkey/stealth-account-kit';
-import { generateStealthAddress } from '../helper/stealthAddress';
+import { generateMetaStealthKeys, generateStealthAddress } from '../helper/stealthAddress';
 
 /**
  * Defines the shape of the MainContext, that for the scope of this project
@@ -121,15 +121,10 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
   const initMasterKey = useCallback(async (masterPrivateKey: `0x${string}`) => {
     setMasterPrivateKey(masterPrivateKey);
 
-    // Generate a signature to derive meta stealth keys
-    const message_to_authenticate = 'Hello Devcon 7!!';
-    const masterKeyAccount = privateKeyToAccount(masterPrivateKey);
-    const messageSignature = await masterKeyAccount.signMessage({
-      message: message_to_authenticate,
+    const keys = await generateMetaStealthKeys({
+      masterPrivateKey,
     });
 
-    // Derive stealth keys from the signature
-    const keys = generateKeysFromSignature(messageSignature);
     setMetaStealthKeys({
       spendingPublicKey: privateKeyToAccount(keys.spendingPrivateKey).publicKey,
       spendingPrivateKey: keys.spendingPrivateKey,
