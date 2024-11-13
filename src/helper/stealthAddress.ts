@@ -1,9 +1,10 @@
 import {
   extractViewingPrivateKeyNode,
-  generateEphemeralPrivateKey,
+  generateEphemeralPrivateKey, generateKeysFromSignature,
   generateStealthAddresses,
   generateStealthPrivateKey
 } from '@fluidkey/stealth-account-kit';
+import { privateKeyToAccount } from 'viem/accounts';
 
 /**
  * Generates a stealth address and its corresponding ephemeral private key.
@@ -26,17 +27,20 @@ export const generateStealthAddress = (params: {
   // Define the node number used for extracting the viewing private key node.
   const viewingPrivateKeyNodeNumber = 0;
 
-  // Extract the specific node from the viewing private key required for generating the ephemeral key.
+  // Use Stealth Account kit to extract the specific node from the viewing private key
+  // required for generating the ephemeral key.
   const privateViewingKeyNode = extractViewingPrivateKeyNode(params.viewingPrivateKey, viewingPrivateKeyNodeNumber);
 
-  // Generate an ephemeral private key using the extracted viewing key node and the provided nonce.
+  // Use Stealth Account kit to generate an ephemeral private key using the extracted
+  // viewing key node and the provided nonce.
   const { ephemeralPrivateKey } = generateEphemeralPrivateKey({
     viewingPrivateKeyNode: privateViewingKeyNode,
     nonce: params.nonce,
     chainId: 0,
   });
 
-  // Generate stealth addresses using the spending public key and the generated ephemeral private key.
+  // Use Stealth Account Kit to generate stealth addresses using the spending
+  // public key and the generated ephemeral private key.
   const { stealthAddresses } = generateStealthAddresses({
     spendingPublicKeys: [params.spendingPublicKey],
     ephemeralPrivateKey,
@@ -62,7 +66,8 @@ export const evalStealthAddressPrivateKey = (params: {
   ephemeralPublicKey: `0x${string}`;
 }): `0x${string}` => {
 
-  // Generate the stealth private spending key using the provided spending private key and ephemeral public key.
+  // USe Stealth Account kit to generate the stealth private spending key using the provided
+  // spending private key and ephemeral public key.
   const { stealthPrivateKey } = generateStealthPrivateKey({
     spendingPrivateKey: params.spendingPrivateKey,
     ephemeralPublicKey: params.ephemeralPublicKey,
@@ -70,3 +75,29 @@ export const evalStealthAddressPrivateKey = (params: {
 
   return stealthPrivateKey;
 };
+
+/**
+ * Generates the meta stealth keys based on the provided master private key.
+ *
+ * @param params - The parameters required to generate the meta stealth keys.
+ * @param params.masterPrivateKey - The master private key in hex format.
+ * @returns An object containing the generated spending and viewing private keys.
+ */
+export const generateMetaStealthKeys = async (params: {
+  masterPrivateKey: `0x${string}`;
+}): Promise<{
+  spendingPrivateKey: `0x${string}`;
+  viewingPrivateKey: `0x${string}`;
+}> => {
+  const message_to_authenticate = 'Hello Devcon 7!!';
+
+  // Load the master key account
+  const masterKeyAccount = privateKeyToAccount(params.masterPrivateKey);
+  // Generate a signature to derive meta stealth keys
+  const messageSignature = await masterKeyAccount.signMessage({
+    message: message_to_authenticate,
+  });
+
+  // Use Stealth Account kit to Derive stealth keys from the signature
+  return generateKeysFromSignature(messageSignature);
+}
