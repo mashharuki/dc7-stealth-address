@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable prefer-regex-literals */
 /* eslint-disable @typescript-eslint/triple-slash-reference */
