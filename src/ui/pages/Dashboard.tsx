@@ -112,7 +112,7 @@ const Dashboard: React.FC<IDashboard> = () => {
       >
         {/* Logo Image */}
         <img
-          src={'/imgs/dc7SeaLogo.avif'}
+          src={'/imgs/dc7SeaLogo.png'}
           alt={'Dc7Sea Logo'}
           width={180}
         />
