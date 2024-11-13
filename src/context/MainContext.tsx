@@ -82,6 +82,10 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
       viewingPrivateKey: metaStealthKeys.viewingPrivateKey,
     });
 
+    if (newStealthAddress.stealthAddress === '0x') {
+      return;
+    }
+
     // Add the new account to the account list and persist it in local storage
     setAccountList([
       ...(accountListLs ? accountListLs : []),
