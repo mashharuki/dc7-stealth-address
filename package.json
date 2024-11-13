@@ -1,5 +1,5 @@
 {
-  "name": "devcon-7-stealth-address-generation",
+  "name": "dc7-stealth-address",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
