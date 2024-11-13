@@ -27,17 +27,20 @@ export const generateStealthAddress = (params: {
   // Define the node number used for extracting the viewing private key node.
   const viewingPrivateKeyNodeNumber = 0;
 
-  // Extract the specific node from the viewing private key required for generating the ephemeral key.
+  // Use Stealth Account kit to extract the specific node from the viewing private key
+  // required for generating the ephemeral key.
   const privateViewingKeyNode = extractViewingPrivateKeyNode(params.viewingPrivateKey, viewingPrivateKeyNodeNumber);
 
-  // Generate an ephemeral private key using the extracted viewing key node and the provided nonce.
+  // Use Stealth Account kit to generate an ephemeral private key using the extracted
+  // viewing key node and the provided nonce.
   const { ephemeralPrivateKey } = generateEphemeralPrivateKey({
     viewingPrivateKeyNode: privateViewingKeyNode,
     nonce: params.nonce,
     chainId: 0,
   });
 
-  // Generate stealth addresses using the spending public key and the generated ephemeral private key.
+  // Use Stealth Account Kit to generate stealth addresses using the spending
+  // public key and the generated ephemeral private key.
   const { stealthAddresses } = generateStealthAddresses({
     spendingPublicKeys: [params.spendingPublicKey],
     ephemeralPrivateKey,
@@ -63,7 +66,8 @@ export const evalStealthAddressPrivateKey = (params: {
   ephemeralPublicKey: `0x${string}`;
 }): `0x${string}` => {
 
-  // Generate the stealth private spending key using the provided spending private key and ephemeral public key.
+  // USe Stealth Account kit to generate the stealth private spending key using the provided
+  // spending private key and ephemeral public key.
   const { stealthPrivateKey } = generateStealthPrivateKey({
     spendingPrivateKey: params.spendingPrivateKey,
     ephemeralPublicKey: params.ephemeralPublicKey,
@@ -85,13 +89,15 @@ export const generateMetaStealthKeys = async (params: {
   spendingPrivateKey: `0x${string}`;
   viewingPrivateKey: `0x${string}`;
 }> => {
-  // Generate a signature to derive meta stealth keys
   const message_to_authenticate = 'Hello Devcon 7!!';
+
+  // Load the master key account
   const masterKeyAccount = privateKeyToAccount(params.masterPrivateKey);
+  // Generate a signature to derive meta stealth keys
   const messageSignature = await masterKeyAccount.signMessage({
     message: message_to_authenticate,
   });
 
-  // Derive stealth keys from the signature
+  // Use Stealth Account kit to Derive stealth keys from the signature
   return generateKeysFromSignature(messageSignature);
 }
