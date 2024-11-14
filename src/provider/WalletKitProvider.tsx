@@ -1,12 +1,12 @@
-import React, { ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import WalletKit, { WalletKitTypes } from '@reown/walletkit';
 import Core from '@walletconnect/core';
 import { buildApprovedNamespaces, getSdkError } from '@walletconnect/utils';
-import { MainContext } from '../context/MainContext';
-import WalletKit, { WalletKitTypes } from '@reown/walletkit';
+import React, { ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { privateKeyToAccount } from 'viem/accounts';
-import WCConfirmationDialog from '../ui/atoms/WCConfirmationDialog/WCConfirmationDialog';
-import { evalStealthAddressPrivateKey } from '../helper/stealthAddress';
+import { MainContext } from '../context/MainContext';
 import { MetaStealthKey } from '../context/MainContextTypes';
+import { evalStealthAddressPrivateKey } from '../helper/stealthAddress';
+import WCConfirmationDialog from '../ui/atoms/WCConfirmationDialog/WCConfirmationDialog';
 
 interface WalletKitProviderProps {
   children: ReactNode;
@@ -75,11 +75,12 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
         proposal: params,
         supportedNamespaces: {
           eip155: {
-            chains: ['eip155:1', 'eip155:8453', 'eip155:11155111'],
+            chains: ['eip155:1', 'eip155:8453', 'eip155:11155111', 'eip155:137'],
             methods: ['eth_sendTransaction', 'personal_sign', 'eth_signTypedData_v4'],
             events: ['accountsChanged', 'chainChanged'],
             accounts: [
               `eip155:1:${activeAccountRef.current.address.toLowerCase()}`,
+              `eip155:137:${activeAccountRef.current.address.toLowerCase()}`,
               `eip155:8453:${activeAccountRef.current.address.toLowerCase()}`,
               `eip155:11155111:${activeAccountRef.current.address.toLowerCase()}`
             ],
@@ -235,6 +236,10 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
    * Initializes the WalletKit instance, sets up event listeners, and restores any existing sessions.
    */
   useEffect(() => {
+    /**
+     * initializeWalletKit method
+     * @returns 
+     */
     const initializeWalletKit = async () => {
       const core = new Core({
         projectId: process.env.REACT_APP_REOWN_PROJECT_ID
@@ -315,10 +320,11 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
         proposal: proposal,
         supportedNamespaces: {
           eip155: {
-            chains: ['eip155:8453', 'eip155:11155111'],
+            chains: ['eip155:8453', 'eip155:11155111', 'eip155:137'],
             methods: ['eth_sendTransaction', 'personal_sign', 'eth_signTypedData_v4'],
             events: ['accountsChanged', 'chainChanged'],
             accounts: [
+              `eip155:137:${activeAccount.address.toLowerCase()}`,
               `eip155:8453:${activeAccount.address.toLowerCase()}`,
               `eip155:11155111:${activeAccount.address.toLowerCase()}`
             ],
@@ -344,10 +350,11 @@ const WalletKitProvider: React.FC<WalletKitProviderProps> = ({children}) => {
         proposal: proposal,
         supportedNamespaces: {
           eip155: {
-            chains: ['eip155:8453', 'eip155:11155111'],
+            chains: ['eip155:8453', 'eip155:11155111', 'eip155:137'],
             methods: ['eth_sendTransaction', 'personal_sign', 'eth_signTypedData_v4'],
             events: ['accountsChanged', 'chainChanged'],
             accounts: accountList.flatMap(a => ([
+              `eip155:137:${a.address.toLowerCase()}`,
               `eip155:8453:${a.address.toLowerCase()}`,
               `eip155:11155111:${a.address.toLowerCase()}`
             ]))

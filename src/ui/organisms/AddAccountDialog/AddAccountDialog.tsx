@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   Button,
   Dialog,
@@ -8,6 +7,7 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
+import React, { useState } from 'react';
 
 interface AddAccountDialogProps {
   open: boolean;
@@ -16,6 +16,11 @@ interface AddAccountDialogProps {
   nextAccountNumber: number;
 }
 
+/**
+ * AddAccountDialog Component
+ * @param param0 
+ * @returns 
+ */
 const AddAccountDialog: React.FC<AddAccountDialogProps> = ({
                                                              open,
                                                              onClose,

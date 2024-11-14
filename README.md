@@ -75,3 +75,4 @@ This project is for demonstration and educational purposes and is not intended f
 
 1. [GitHub - stealth-account-kit](https://github.com/fluidkey/fluidkey-stealth-account-kit)
 2. [生成したステルウォレットアドレス](https://basescan.org/address/0xc4d9f7a634ff0aead23fc89ed923baa72c4adc5a)
+3. [fluidkey app](https://app.fluidkey.com/)

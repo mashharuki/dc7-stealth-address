@@ -8,6 +8,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 
 /**
  * Generates the meta stealth keys based on the provided master private key.
+ * マスター鍵からステルスキーを生成する。
  *
  * @param params - The parameters required to generate the meta stealth keys.
  * @param params.masterPrivateKey - The master private key in hex format.
@@ -21,7 +22,7 @@ export const generateMetaStealthKeys = async (params: {
 }> => {
   const message_to_authenticate = 'Hello Devcon 7!!';
 
-  // Load the master key account
+  // Load the master key account (mastar Keyはランダムに生成されたもの)
   const masterKeyAccount = privateKeyToAccount(params.masterPrivateKey);
   // Generate a signature to derive meta stealth keys
   const messageSignature = await masterKeyAccount.signMessage({
@@ -29,6 +30,8 @@ export const generateMetaStealthKeys = async (params: {
   });
 
   // Use Stealth Account kit to Derive stealth keys from the signature
+  // spendingPrivateKey: 使うための秘密鍵
+  // viewingPrivateKey: 見るための秘密鍵
   return generateKeysFromSignature(messageSignature);
 }
 
@@ -81,6 +84,7 @@ export const generateStealthAddress = (params: {
 
 /**
  * Evaluates and generates the stealth private spending key based on the spending private key and ephemeral public key.
+ * 支出用の秘密鍵と一時的な公開鍵に基づいて、ステルス（隠れた）支出用の秘密鍵を評価し、生成します。
  *
  * @param params - The parameters required to evaluate the stealth private key.
  * @param params.spendingPrivateKey - The spending private key in hex format.

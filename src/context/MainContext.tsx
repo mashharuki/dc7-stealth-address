@@ -1,10 +1,9 @@
+import WalletKit from '@reown/walletkit';
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import { useLocalStorage } from 'react-use';
 import { privateKeyToAccount } from 'viem/accounts';
-import { AccountBaseType, MetaStealthKey } from './MainContextTypes';
-import WalletKit from '@reown/walletkit';
-import { generateKeysFromSignature } from '@fluidkey/stealth-account-kit';
 import { generateMetaStealthKeys, generateStealthAddress } from '../helper/stealthAddress';
+import { AccountBaseType, MetaStealthKey } from './MainContextTypes';
 
 /**
  * Defines the shape of the MainContext, that for the scope of this project
@@ -28,7 +27,7 @@ interface MainContextProps {
  * Initializes the MainContext with default values.
  */
 export const MainContext = createContext<MainContextProps>({
-  chainId: 8453,
+  chainId: 11155111,
   activeAccount: undefined,
   activeAccountPosition: -1,
   accountList: [],
@@ -76,6 +75,7 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
     }
 
     // Generate a new stealth address and its corresponding ephemeral private key
+    // ステルスアドレスを生成する。
     const newStealthAddress = generateStealthAddress({
       nonce,
       spendingPublicKey: metaStealthKeys.spendingPublicKey,
@@ -120,7 +120,7 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
    */
   const initMasterKey = useCallback(async (masterPrivateKey: `0x${string}`) => {
     setMasterPrivateKey(masterPrivateKey);
-
+    // ステルスアドレス用の鍵を生成する。
     const keys = await generateMetaStealthKeys({
       masterPrivateKey,
     });
@@ -165,7 +165,7 @@ export const MainProvider: React.FC<MainProviderProps> = ({ children }) => {
   return (
     <MainContext.Provider
       value={{
-        chainId: 8453,
+        chainId: 11155111,
         masterPrivateKey,
         createStealthAddress,
         activeAccount: activeAccountPositionLs && accountListLs ? accountListLs[parseInt(activeAccountPositionLs)] : undefined,
