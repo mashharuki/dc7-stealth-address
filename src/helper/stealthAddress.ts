@@ -7,6 +7,32 @@ import {
 import { privateKeyToAccount } from 'viem/accounts';
 
 /**
+ * Generates the meta stealth keys based on the provided master private key.
+ *
+ * @param params - The parameters required to generate the meta stealth keys.
+ * @param params.masterPrivateKey - The master private key in hex format.
+ * @returns An object containing the generated spending and viewing private keys.
+ */
+export const generateMetaStealthKeys = async (params: {
+  masterPrivateKey: `0x${string}`;
+}): Promise<{
+  spendingPrivateKey: `0x${string}`;
+  viewingPrivateKey: `0x${string}`;
+}> => {
+  const message_to_authenticate = 'Hello Devcon 7!!';
+
+  // Load the master key account
+  const masterKeyAccount = privateKeyToAccount(params.masterPrivateKey);
+  // Generate a signature to derive meta stealth keys
+  const messageSignature = await masterKeyAccount.signMessage({
+    message: message_to_authenticate,
+  });
+
+  // Use Stealth Account kit to Derive stealth keys from the signature
+  return generateKeysFromSignature(messageSignature);
+}
+
+/**
  * Generates a stealth address and its corresponding ephemeral private key.
  *
  * @param params - The parameters required to generate the stealth address.
@@ -69,29 +95,3 @@ export const evalStealthAddressPrivateKey = (params: {
 
   return '0x';
 };
-
-/**
- * Generates the meta stealth keys based on the provided master private key.
- *
- * @param params - The parameters required to generate the meta stealth keys.
- * @param params.masterPrivateKey - The master private key in hex format.
- * @returns An object containing the generated spending and viewing private keys.
- */
-export const generateMetaStealthKeys = async (params: {
-  masterPrivateKey: `0x${string}`;
-}): Promise<{
-  spendingPrivateKey: `0x${string}`;
-  viewingPrivateKey: `0x${string}`;
-}> => {
-  const message_to_authenticate = 'Hello Devcon 7!!';
-
-  // Load the master key account
-  const masterKeyAccount = privateKeyToAccount(params.masterPrivateKey);
-  // Generate a signature to derive meta stealth keys
-  const messageSignature = await masterKeyAccount.signMessage({
-    message: message_to_authenticate,
-  });
-
-  // Use Stealth Account kit to Derive stealth keys from the signature
-  return generateKeysFromSignature(messageSignature);
-}
